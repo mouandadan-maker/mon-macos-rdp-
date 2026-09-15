@@ -15,4 +15,4 @@ jobs:
         sudo /System/Library/CoreServices/RemoteManagement/ARDAgent.app/contents/Resources/kickstart -activate -configure -access -on -clientopts -setvncpasswd -vncpasswd MonSuperMdp123! -perms -all -restart -agent -privs -all
     - name: Lancer la connexion avec Pinggy
       run: |
-        ssh -p 443 -R 0:localhost:5900 a.pinggy.io
+        ssh -o StrictHostKeyChecking=no -p 443 -R 0:localhost:5900 a.pinggy.io
