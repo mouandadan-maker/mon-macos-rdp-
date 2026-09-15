@@ -10,9 +10,25 @@ jobs:
     - name: Installer TeamViewer
       run: |
         brew install --cask teamviewer
-    - name: Activer le Partage d'Écran macOS (VNC)
+    
+    - name: Configurer le mot de passe TeamViewer
       run: |
-        sudo /System/Library/CoreServices/RemoteManagement/ARDAgent.app/contents/Resources/kickstart -activate -configure -access -on -clientopts -setvncpasswd -vncpasswd MonSuperMdp123! -perms -all -restart -agent -privs -all
-    - name: Lancer la connexion avec Pinggy
+        # On définit un mot de passe fixe pour TeamViewer
+        sudo /Applications/TeamViewer.app/Contents/Helpers/TeamViewer_Service -passwd MonSuperMdp123!
+    
+    - name: Démarrer TeamViewer et afficher l'ID
       run: |
-        ssh -o StrictHostKeyChecking=no -p 443 -R 0:localhost:5900 a.pinggy.io
+        # On lance TeamViewer
+        open -a TeamViewer
+        sleep 10
+        # On récupère et on affiche l'ID de connexion dans les logs GitHub
+        echo "==========================================="
+        echo "VOTRE ID TEAMVIEWER EST :"
+        defaults read /Library/Preferences/com.teamviewer.teamviewer.preferences.plist ClientID
+        echo "MOT DE PASSE : MonSuperMdp123!"
+        echo "==========================================="
+    
+    - name: Garder la machine allumée
+      run: |
+        # Cette ligne laisse le Mac tourner pendant 6 heures
+        sleep 21600
