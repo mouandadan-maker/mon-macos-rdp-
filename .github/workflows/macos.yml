@@ -7,28 +7,12 @@ jobs:
   build:
     runs-on: macos-latest
     steps:
-    - name: Installer TeamViewer
+    - name: Activer le Partage d'Écran macOS Legacy (VNC)
       run: |
-        brew install --cask teamviewer
+        # On définit le mot de passe VNC système correctement pour les connexions distantes
+        sudo /System/Library/CoreServices/RemoteManagement/ARDAgent.app/Contents/Resources/kickstart -activate -configure -access -on -clientopts -setvnclegacy -vnclegacy yes -clientopts -setvncpw -vncpw MonSuperMdp123! -restart -agent -privs -all
     
-    - name: Configurer le mot de passe TeamViewer
+    - name: Lancer la connexion avec Pinggy
       run: |
-        # On définit un mot de passe fixe pour TeamViewer
-        sudo /Applications/TeamViewer.app/Contents/Helpers/TeamViewer_Service -passwd MonSuperMdp123!
-    
-    - name: Démarrer TeamViewer et afficher l'ID
-      run: |
-        # On lance TeamViewer
-        open -a TeamViewer
-        sleep 10
-        # On récupère et on affiche l'ID de connexion dans les logs GitHub
-        echo "==========================================="
-        echo "VOTRE ID TEAMVIEWER EST :"
-        defaults read /Library/Preferences/com.teamviewer.teamviewer.preferences.plist ClientID
-        echo "MOT DE PASSE : MonSuperMdp123!"
-        echo "==========================================="
-    
-    - name: Garder la machine allumée
-      run: |
-        # Cette ligne laisse le Mac tourner pendant 6 heures
-        sleep 21600
+        # On force la création du tunnel SSH sans vérification de clé
+        ssh -o StrictHostKeyChecking=no -p 443 -R 0:localhost:5900 a.pinggy.io
