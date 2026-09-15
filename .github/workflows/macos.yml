@@ -5,14 +5,16 @@ on:
 
 jobs:
   build:
-    runs-on: macos-latest
+    runs-on: macos-14
     steps:
-    - name: Activer le Partage d'Écran macOS Legacy (VNC)
+    - name: Activer le Partage d'Écran et l'utilisateur
       run: |
-        # On définit le mot de passe VNC système correctement pour les connexions distantes
-        sudo /System/Library/CoreServices/RemoteManagement/ARDAgent.app/Contents/Resources/kickstart -activate -configure -access -on -clientopts -setvnclegacy -vnclegacy yes -clientopts -setvncpw -vncpw MonSuperMdp123! -restart -agent -privs -all
-    
-    - name: Lancer la connexion avec Pinggy
+        sudo /System/Library/CoreServices/RemoteManagement/ARDAgent.app/Contents/Resources/kickstart -configure -allowAccessFor -allUsers -privs -all
+        sudo /System/Library/CoreServices/RemoteManagement/ARDAgent.app/Contents/Resources/kickstart -configure -clientopts -setvncpasswd -vncpasswd MonSuperMdp123!
+        sudo /System/Library/CoreServices/RemoteManagement/ARDAgent.app/Contents/Resources/kickstart -restart -agent
+        sudo launchctl load -w /System/Library/LaunchDaemons/com.apple.screensharing.plist 2>/dev/null || true
+        
+    - name: Lancer la connexion avec Pinggy Privé
       run: |
-        # On force la création du tunnel SSH sans vérification de clé
-        ssh -o StrictHostKeyChecking=no -p 443 -R 0:localhost:5900 a.pinggy.io
+        # On utilise ta commande personnalisée avec ton token pour le port 5900
+        ssh -p 443 -R 0:localhost:5900 -o StrictHostKeyChecking=no -o ServerAliveInterval=30 aZvC1cPjqDJ@free.pinggy.io
