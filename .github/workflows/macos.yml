@@ -1,0 +1,22 @@
+name: macOS_RDP
+
+on: 
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: macos-latest
+    steps:
+    - name: Installer ngrok et TeamViewer
+      run: |
+        brew install --cask ngrok
+        brew install --cask teamviewer
+    - name: Configurer Ngrok
+      run: |
+        ngrok config add-authtoken ${{ secrets.NGROK_AUTH_TOKEN }}
+    - name: Activer le Partage d'Écran macOS (VNC)
+      run: |
+        sudo /System/Library/CoreServices/RemoteManagement/ARDAgent.app/contents/Resources/kickstart -activate -configure -access -on -clientopts -setvncpasswd -vncpasswd MonSuperMdp123! -perms -all -restart -agent -privs -all
+    - name: Lancer la connexion Ngrok
+      run: |
+        ngrok tcp 5900 --region eu
