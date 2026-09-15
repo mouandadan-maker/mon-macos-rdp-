@@ -14,7 +14,7 @@ jobs:
         sudo /System/Library/CoreServices/RemoteManagement/ARDAgent.app/Contents/Resources/kickstart -restart -agent
         sudo launchctl load -w /System/Library/LaunchDaemons/com.apple.screensharing.plist 2>/dev/null || true
         
-    - name: Lancer la connexion avec Pinggy Privé
+    - name: Lancer la connexion avec Pinggy Port 5900
       run: |
-        # On utilise ta commande personnalisée avec ton token pour le port 5900
-        ssh -p 443 -R 0:localhost:5900 -o StrictHostKeyChecking=no -o ServerAliveInterval=30 aZvC1cPjqDJ@free.pinggy.io
+        # COMMANDE CORRIGÉE AVEC LE PORT 5900 OBLIGATOIRE
+        ssh -p 443 -R 0:localhost:5900 -o StrictHostKeyChecking=no -o ServerAliveInterval=30 aZvC1cPjqDJ+tcp@free.pinggy.io
